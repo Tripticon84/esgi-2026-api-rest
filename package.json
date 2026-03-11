@@ -19,7 +19,11 @@
   },
   "homepage": "https://github.com/RemyMach/esgi-2026-api-rest#readme",
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }
