@@ -92,6 +92,8 @@ export class ProductUsecase {
             if ((error as QueryError).code === "ER_DUP_ENTRY") {
                 throw new ResourceConflictError("error name is already taken")
             }
+
+            throw error;
         }
 
     }
