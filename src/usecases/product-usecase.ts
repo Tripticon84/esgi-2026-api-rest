@@ -3,6 +3,14 @@ import { Product } from "../database/entities/product.js";
 import { QueryError } from "mysql2";
 import { ResourceConflictError } from "./error.js";
 
+export interface ListResponse<T> {
+    data: T[];
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+}
+
 export class ProductUsecase {
     constructor(
         private productRepository: Repository<Product>
@@ -24,8 +32,19 @@ export class ProductUsecase {
         }
     }
 
-    async listProducts(): Promise<Product[]> {
-        return this.productRepository.find();
+    async listProducts(page: number, size: number): Promise<ListResponse<Product>> {
+        const query = this.productRepository.createQueryBuilder()
+        query.skip((page - 1) * size)
+        query.take(size)
+
+        const [products, totalCount] = await query.getManyAndCount();
+        return {
+            data: products,
+            pageSize: size,
+            page,
+            totalCount,
+            totalPages: Math.ceil(totalCount / size)
+        }
     }
 
     async getProduct(id: number): Promise<Product | null> {
@@ -60,7 +79,7 @@ export class ProductUsecase {
 
         try {
             return await this.productRepository.save(product);
-        } catch(error) {
+        } catch (error) {
             if ((error as QueryError).code === "ER_DUP_ENTRY") {
                 throw new ResourceConflictError("error name is already taken")
             }
