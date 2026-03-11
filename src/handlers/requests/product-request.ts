@@ -9,6 +9,6 @@ export interface ProductIdRequest {
 
 export interface UpdateProductRequest {
     id: number
-    name: string
-    price: number
+    price?: number
+    name?: string
 }

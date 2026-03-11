@@ -10,8 +10,7 @@ export const ProductIdValidator = Joi.object<ProductIdRequest>({
     id: Joi.number().min(1).required()
 })
 
-export const ProductUpdateValidator = Joi.object<UpdateProductRequest>({
+export const UpdateProductValidator = Joi.object<UpdateProductRequest>({
     id: Joi.number().min(1).required(),
-    name: Joi.string().min(3),
-    price: Joi.number().min(1)
+    price: Joi.number().min(1).optional()
 })
