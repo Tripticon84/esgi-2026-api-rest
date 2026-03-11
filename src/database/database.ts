@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { Product } from "./entities/product.js";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -9,4 +10,5 @@ export const AppDataSource = new DataSource({
     database: "your_database",
     synchronize: true,
     logging: true,
+    entities: [Product]
 })
