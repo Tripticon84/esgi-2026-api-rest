@@ -23,4 +23,14 @@ export class ProductUsecase {
             throw error;
         }
     }
+
+    async listProducts(): Promise<Product[]> {
+        return this.productRepository.find();
+    }
+
+    async getProduct(id: number): Promise<Product|null> {
+        return await this.productRepository.findOneBy({
+            id
+        });
+    }
 }
