@@ -18,7 +18,7 @@ export const CreateProduct = async (req: Request, res: Response) => {
     try {
         const product = await productUsecase.createProduct(createProductRequest.name, createProductRequest.price);
         return res.status(201).send(product);
-    } catch(error: unknown) {
+    } catch (error: unknown) {
         if (error instanceof ResourceConflictError) {
             return res.status(409).send({
                 name: "name is already taken"
@@ -36,7 +36,7 @@ export const ListProducts = async (req: Request, res: Response) => {
     try {
         const product = await productUsecase.listProducts();
         return res.send(product);
-    } catch(error: unknown) {
+    } catch (error: unknown) {
         return res.status(500).send({
             error: "Internal Server Error"
         })
@@ -53,8 +53,13 @@ export const GetProduct = async (req: Request, res: Response) => {
     const productUsecase = new ProductUsecase(AppDataSource.getRepository(Product));
     try {
         const product = await productUsecase.getProduct(productIdRequest.id);
+        if (product === null) {
+            return res.status(404).send({
+                error: "product not found"
+            })
+        }
         return res.send(product);
-    } catch(error: unknown) {
+    } catch (error: unknown) {
         return res.status(500).send({
             error: "Internal Server Error"
         })
