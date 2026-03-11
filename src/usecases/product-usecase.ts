@@ -43,4 +43,28 @@ export class ProductUsecase {
 
         return product
     }
+
+    async updateProduct(id: number, price?: number, name?: string): Promise<Product | null> {
+        const product = await this.getProduct(id);
+        if (product === null) {
+            return null;
+        }
+
+        if (price !== undefined) {
+            product.price = price
+        }
+
+        if (name !== undefined) {
+            product.name = name
+        }
+
+        try {
+            return await this.productRepository.save(product);
+        } catch(error) {
+            if ((error as QueryError).code === "ER_DUP_ENTRY") {
+                throw new ResourceConflictError("error name is already taken")
+            }
+        }
+
+    }
 }

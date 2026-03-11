@@ -6,3 +6,9 @@ export interface CreateProductRequest {
 export interface ProductIdRequest {
     id: number
 }
+
+export interface UpdateProductRequest {
+    id: number
+    price?: number
+    name?: string
+}
