@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { ProductUsecase } from "../usecases/product-usecase.js"
 import { AppDataSource } from "../database/database.js"
-import { CreateProductValidator, ProductIdValidator, UpdateProductValidator } from "./validators/product-validator.js"
+import { CreateProductValidator, ListProductValidator, ProductIdValidator, UpdateProductValidator } from "./validators/product-validator.js"
 import { generateValidationErrorMessage } from "./validators/utils.js"
 import { Product } from "../database/entities/product.js"
 import { ResourceConflictError } from "../usecases/error.js"
@@ -39,18 +39,35 @@ export const CreateProduct = async (req: Request, res: Response) => {
 };
 
 export const ListProducts = async (req: Request, res: Response) => {
-  const productUsecase = new ProductUsecase(
-    AppDataSource.getRepository(Product),
-  );
-  try {
-    const product = await productUsecase.listProducts();
-    return res.send(product);
-  } catch (error: unknown) {
-    return res.status(500).send({
-      error: "Internal Server Error",
-    });
-  }
-};
+    const validation = ListProductValidator.validate(req.query)
+    if (validation.error) {
+        return res.status(400).send(generateValidationErrorMessage(validation.error.details))
+    }
+    const listProductRequest = validation.value
+    var size = 10;
+    if (listProductRequest.size !== undefined) {
+        size = listProductRequest.size
+    }
+
+    var page = 1;
+    if (listProductRequest.page !== undefined) {
+        page = listProductRequest.page
+    }
+
+    const productUsecase = new ProductUsecase(AppDataSource.getRepository(Product));
+    try {
+        const product = await productUsecase.listProducts({
+            page,
+            size,
+            priceMax: listProductRequest.priceMax
+        });
+        return res.send(product);
+    } catch (error: unknown) {
+        return res.status(500).send({
+            error: "Internal Server Error"
+        })
+    }
+}
 
 export const GetProduct = async (req: Request, res: Response) => {
   // validation

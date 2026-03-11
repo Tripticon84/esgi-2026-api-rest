@@ -12,3 +12,10 @@ export interface UpdateProductRequest {
     price?: number
     name?: string
 }
+
+export interface ListProductRequest {
+    page?: number
+    size?: number
+    priceMax?: number
+}
+
