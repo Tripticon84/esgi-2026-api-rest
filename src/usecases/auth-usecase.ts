@@ -2,8 +2,9 @@ import { Repository } from "typeorm";
 import { User } from "../database/entities/user.js";
 import { Token } from "../database/entities/token.js";
 import { compare } from "bcrypt";
+import jwt from "jsonwebtoken"
 
-export class UserUsecase {
+export class AuthUsecase {
     constructor(
         private userRepository: Repository<User>,
         private tokenRepository: Repository<Token>
@@ -22,9 +23,14 @@ export class UserUsecase {
             return null;
         }
 
-        // generer un jwt 
-        // l'enregistrer en DB dans la table TOKEN
-        // le renvoyer au client
-        return null;
+        const secret = process.env.JWT_SECRET ?? "valuerandom"
+        const jsonwebtoken = jwt.sign({userId: user.id, email: user.email}, secret, {expiresIn: '1d'})
+
+        const token = this.tokenRepository.create({
+            token: jsonwebtoken,
+            user
+        })
+        
+        return await this.tokenRepository.save(token)
     }
 }
