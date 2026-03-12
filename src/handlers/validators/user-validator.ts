@@ -9,4 +9,4 @@ export const CreateUserValidator = Joi.object<CreateUserRequest>({
 export const LoginValidator = Joi.object<LoginRequest>({
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required()
-})
+}).options({abortEarly: false})

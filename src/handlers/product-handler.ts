@@ -32,6 +32,7 @@ export const CreateProduct = async (req: Request, res: Response) => {
 }
 
 export const ListProducts = async (req: Request, res: Response) => {
+
     const validation = ListProductValidator.validate(req.query)
     if (validation.error) {
         return res.status(400).send(generateValidationErrorMessage(validation.error.details))
@@ -48,18 +49,13 @@ export const ListProducts = async (req: Request, res: Response) => {
     }
 
     const productUsecase = new ProductUsecase(AppDataSource.getRepository(Product));
-    try {
-        const product = await productUsecase.listProducts({
-            page,
-            size,
-            priceMax: listProductRequest.priceMax
-        });
-        return res.send(product);
-    } catch (error: unknown) {
-        return res.status(500).send({
-            error: "Internal Server Error"
-        })
-    }
+
+    const product = await productUsecase.listProducts({
+        page,
+        size,
+        priceMax: listProductRequest.priceMax
+    });
+    return res.send(product);
 }
 
 export const GetProduct = async (req: Request, res: Response) => {
@@ -70,19 +66,14 @@ export const GetProduct = async (req: Request, res: Response) => {
     }
     const productIdRequest = validation.value
     const productUsecase = new ProductUsecase(AppDataSource.getRepository(Product));
-    try {
-        const product = await productUsecase.getProduct(productIdRequest.id);
-        if (product === null) {
-            return res.status(404).send({
-                error: "product not found"
-            })
-        }
-        return res.send(product);
-    } catch (error: unknown) {
-        return res.status(500).send({
-            error: "Internal Server Error"
+
+    const product = await productUsecase.getProduct(productIdRequest.id);
+    if (product === null) {
+        return res.status(404).send({
+            error: "product not found"
         })
     }
+    return res.send(product);
 }
 
 export const DeleteProduct = async (req: Request, res: Response) => {
@@ -93,19 +84,15 @@ export const DeleteProduct = async (req: Request, res: Response) => {
     const productIdRequest = validation.value
 
     const productUsecase = new ProductUsecase(AppDataSource.getRepository(Product));
-    try {
-        const productDeleted = await productUsecase.deleteProduct(productIdRequest.id);
-        if (productDeleted === null) {
-            return res.status(404).send({
-                error: "product not found"
-            })
-        }
-        return res.send(productDeleted);
-    } catch (error) {
-        return res.status(500).send({
-            error: "Internal Server Error"
+
+    const productDeleted = await productUsecase.deleteProduct(productIdRequest.id);
+    if (productDeleted === null) {
+        return res.status(404).send({
+            error: "product not found"
         })
     }
+    return res.send(productDeleted);
+
 }
 
 export const UpdateProduct = async (req: Request, res: Response) => {
@@ -135,9 +122,6 @@ export const UpdateProduct = async (req: Request, res: Response) => {
                 name: "name is already taken"
             })
         }
-    
-        return res.status(500).send({
-            error: "Internal Server Error"
-        })
+        throw error;
     }
 }

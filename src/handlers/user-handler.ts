@@ -27,9 +27,7 @@ export const CreateUser = async (req: Request, res: Response) => {
         if ((error as QueryError).code === "ER_DUP_ENTRY") {
             return res.status(400).send({ "error": "email already exist" })
         }
-        console.log(error)
-        return res.status(500).send({
-            error: "Internal Server Error"
-        })
+        
+        throw error;
     }
 }

@@ -7,10 +7,10 @@ import { User } from "../database/entities/user.js"
 import { Token } from "../database/entities/token.js"
 
 export const Login = async (req: Request, res: Response) => {
+    console.log(req.body)
     const validation = LoginValidator.validate(req.body)
     if(validation.error) {
-        res.status(400).send(generateValidationErrorMessage(validation.error.details))
-        return
+        return res.status(400).send(generateValidationErrorMessage(validation.error.details))
     }
 
     const loginRequest = validation.value
@@ -19,7 +19,7 @@ export const Login = async (req: Request, res: Response) => {
         AppDataSource.getRepository(User),
         AppDataSource.getRepository(Token),
     )
-
+    console.log(loginRequest)
     try {
         const token = await authUsecase.login({
             email: loginRequest.email,
@@ -31,6 +31,7 @@ export const Login = async (req: Request, res: Response) => {
         
         return res.send(token)
     } catch(error) {
+        console.log(error)
         return res.status(500).send({
             error: "Internal Server Error"
         })
