@@ -10,13 +10,21 @@
   "keywords": [],
   "author": "",
   "type": "module",
-  "license": "ISC",
-  "packageManager": "pnpm@10.29.2",
-  "dependencies": {
+  "bugs": {
+    "url": "https://github.com/RemyMach/esgi-2026-api-rest/issues"
+  },
+  "homepage": "https://github.com/RemyMach/esgi-2026-api-rest#readme",
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.6",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typeorm": "^0.3.28",
-    "express": "5.2.1",
-    "joi": "^18.0.2"
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^5.2.1",
+    "joi": "^18.0.2",
+    "mysql2": "^3.19.1",
+    "typeorm": "^0.3.28"
   }
 }
