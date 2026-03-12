@@ -10,7 +10,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -20,6 +24,17 @@ services:
       - mysql-db
     environment:
       - PMA_HOST=mysql-db
+
+  myapp:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql-db: 
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql-db
+
 volumes:
   mysql-data:
     driver: local

@@ -7,4 +7,7 @@ export const InternalServerErrorMiddleware = (err: Error, req: Request, res: Res
     })
 }
 
+export const NotFoundMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    res.status(404).json({ "error": "Route Not Found" });
+}
 
