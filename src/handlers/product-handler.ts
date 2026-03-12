@@ -19,6 +19,7 @@ export const CreateProduct = async (req: Request, res: Response) => {
         const product = await productUsecase.createProduct(createProductRequest.name, createProductRequest.price);
         return res.status(201).send(product);
     } catch (error: unknown) {
+
         if (error instanceof ResourceConflictError) {
             return res.status(409).send({
                 name: "name is already taken"
@@ -135,7 +136,7 @@ export const UpdateProduct = async (req: Request, res: Response) => {
                 name: "name is already taken"
             })
         }
-    
+
         return res.status(500).send({
             error: "Internal Server Error"
         })
