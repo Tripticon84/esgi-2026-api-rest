@@ -1,16 +1,16 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Token } from "./token.js";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Relation, UpdateDateColumn } from "typeorm";
+import type { User } from "./user.js";
 
 @Entity()
-export class User {
+export class Token {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("varchar", { unique: true, length: 255 })
-    email: string;
-
     @Column("varchar", { length: 255 })
-    password: string;
+    token: string;
+
+    @ManyToOne("User", (user: User) => user.tokens)
+    user: User;
 
     @CreateDateColumn()
     createdAt: Date
@@ -21,22 +21,17 @@ export class User {
     @DeleteDateColumn()
     deletedAt: Date
 
-    @OneToMany("Token", (token: Token) => token.user)
-    tokens!: Token[];
-
-
-
     constructor(
         id: number,
-        email: string,
-        password: string,
+        token: string,
+        user: User,
         createdAt: Date,
         updatedAt: Date,
         deletedAt: Date
     ) {
         this.id = id;
-        this.email = email;
-        this.password = password;
+        this.token = token;
+        this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;

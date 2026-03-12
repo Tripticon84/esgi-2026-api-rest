@@ -1,6 +1,7 @@
 import { Application, Request, Response } from "express";
 import { CreateProduct, DeleteProduct, GetProduct, ListProducts, UpdateProduct } from "./product-handler.js";
 import { CreateUser } from "./user-handler.js";
+import { Login } from "./auth-handler.js";
 
 export const initHandlers = (app: Application) => {
   app.get("/", (req, res) => {
@@ -16,5 +17,7 @@ export const initHandlers = (app: Application) => {
     app.patch("/products/:id", UpdateProduct)
 
     app.post("/users", CreateUser)
+
+    app.post("/auth/login", Login)
 
 }
