@@ -27,3 +27,4 @@ export class UserUsecase {
         // le renvoyer au client
         return null;
     }
+}
